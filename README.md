@@ -4,8 +4,11 @@
 [![React](https://img.shields.io/badge/React-19-blue.svg)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-6.0-blue.svg)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-8.0-yellow.svg)](https://vite.dev/)
+[![Live Demo](https://img.shields.io/badge/Demo-Netlify-cyan.svg)](https://kaku4510.netlify.app/)
 
 A premium, single-page **zero-strategy, one-handed idle clicker game** built with React, TypeScript, Zustand, and Vanilla CSS. 
+
+🔗 **Play the Live Game here**: [https://kaku4510.netlify.app/](https://kaku4510.netlify.app/)
 
 The game name, **Kakushigoto (かくしごと)**, translates to *"hidden work"* or *"secrets"*. Using Japanese number-wordplay (Goroawase), **kaku-shi-go-to** transforms into **kaku-4-5-10**—representing the three hidden card ranks at the center of the game: **4**, **5**, and **10**.
 
