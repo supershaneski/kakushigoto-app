@@ -12,6 +12,12 @@ A premium, single-page **zero-strategy, one-handed idle clicker game** built wit
 
 The game name, **Kakushigoto (かくしごと)**, translates to *"hidden work"* or *"secrets"*. Using Japanese number-wordplay (Goroawase), **kaku-shi-go-to** transforms into **kaku-4-5-10**—representing the three hidden card ranks at the center of the game: **4**, **5**, and **10**.
 
+## 📜 Origin & AI Collaboration
+
+This project is an AI-assisted, "vibe-coded" reimagining of an original game concept created years ago. The original Vue-based concept and source code can be found in the [vue-kakushigoto-game](https://github.com/supershaneski/vue-kakushigoto-game) repository.
+
+Using modern front-end techniques, the game has been updated to feature a premium dark glassmorphic UI, a persistent meta-progression shop, offline passive income (idle currency accumulation), and responsive 3D card tilt mechanisms.
+
 ---
 
 ## 🎮 Game Concept & Mechanics
