@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { playTap, playFlip, playCoin, playUpgrade, playVictory, playDefeat } from '../utils/audio'
 
 export interface Upgrade {
   level: number;
@@ -48,6 +49,7 @@ export interface AppStoreProps {
   currentTurn: 'human' | 'computer' | 'resolving';
   roundLog: string;
   idleEarningsAccumulated: number;
+  isMuted: boolean;
   hasCheckedIdle: boolean;
 
   // --- Actions ---
@@ -61,6 +63,7 @@ export interface AppStoreProps {
   checkOfflineEarnings: () => void;
   clearIdleEarnings: () => void;
   updateTimestamp: () => void;
+  toggleMute: () => void;
   resetAllData: () => void;
 }
 
@@ -128,6 +131,7 @@ export const useAppStore = create<AppStoreProps>()(
       matchLosses: 0,
       cardLevel: 1,
       lastSavedTimestamp: Date.now(),
+      isMuted: false,
 
       // Upgrades
       upgrades: defaultUpgrades,
@@ -153,6 +157,10 @@ export const useAppStore = create<AppStoreProps>()(
         const upgradeAddition = upgrades.clickPower.level * upgrades.clickPower.valuePerLevel;
         const addAmount = points !== undefined ? points : (baseClick + upgradeAddition);
         
+        if (points === undefined) {
+          playTap();
+        }
+
         set({
           totalTaps: totalTaps + 1,
           metaPoints: metaPoints + addAmount,
@@ -183,6 +191,7 @@ export const useAppStore = create<AppStoreProps>()(
         }
 
         // 1. Flip current cards back face-down first
+        playFlip();
         const flippedDownCards = cards.map(c => ({ ...c, isFlipped: false }));
         set({
           cards: flippedDownCards,
@@ -218,6 +227,7 @@ export const useAppStore = create<AppStoreProps>()(
         const selectedCard = updatedCards.find(c => c.id === cardId);
         if (!selectedCard) return;
 
+        playFlip();
         set({ 
           cards: updatedCards,
           currentTurn: 'resolving',
@@ -262,6 +272,7 @@ export const useAppStore = create<AppStoreProps>()(
           c.id === computerCard.id ? { ...c, isFlipped: true, isSelectedByComputer: true } : c
         );
 
+        playFlip();
         set({ 
           cards: updatedCards,
           currentTurn: 'resolving',
@@ -303,6 +314,7 @@ export const useAppStore = create<AppStoreProps>()(
           newComputerCoins = Math.max(0, localCoinsComputer - 1);
           pointsEarned = Math.floor(baseRoundWinMP * multiplier);
           logMessage = `You won the round! (+${pointsEarned} Meta-Points) ${isLucky ? '✨ LUCKY DOUBLE! ✨' : ''}`;
+          playCoin();
         } else {
           newHumanCoins = Math.max(0, localCoinsHuman - 1);
           newComputerCoins = Math.min(10, localCoinsComputer + 1);
@@ -329,6 +341,7 @@ export const useAppStore = create<AppStoreProps>()(
             const baseMatchWinMP = 25;
             const matchWinPayout = Math.floor(baseMatchWinMP * (1 + currentUpgrades.matchBonus.level * currentUpgrades.matchBonus.valuePerLevel));
             
+            playVictory();
             set({
               matchState: 'match_over',
               matchResult: 'victory',
@@ -342,6 +355,7 @@ export const useAppStore = create<AppStoreProps>()(
             const baseMatchLoseMP = 8;
             const matchLosePayout = Math.floor(baseMatchLoseMP * (1 + currentUpgrades.matchBonus.level * currentUpgrades.matchBonus.valuePerLevel));
 
+            playDefeat();
             set({
               matchState: 'match_over',
               matchResult: 'defeat',
@@ -379,6 +393,7 @@ export const useAppStore = create<AppStoreProps>()(
             nextCardLevel = updatedUpgrade.level + 1;
           }
 
+          playUpgrade();
           set({
             metaPoints: metaPoints - cost,
             upgrades: newUpgrades,
@@ -420,6 +435,10 @@ export const useAppStore = create<AppStoreProps>()(
         set({ lastSavedTimestamp: Date.now() });
       },
 
+      toggleMute: () => {
+        set((state) => ({ isMuted: !state.isMuted, lastSavedTimestamp: Date.now() }));
+      },
+
       resetAllData: () => {
         set({
           metaPoints: 0,
@@ -427,6 +446,7 @@ export const useAppStore = create<AppStoreProps>()(
           matchWins: 0,
           matchLosses: 0,
           cardLevel: 1,
+          isMuted: false,
           lastSavedTimestamp: Date.now(),
           upgrades: defaultUpgrades,
           localCoinsHuman: 5,
@@ -452,6 +472,7 @@ export const useAppStore = create<AppStoreProps>()(
         cardLevel: state.cardLevel,
         lastSavedTimestamp: state.lastSavedTimestamp,
         upgrades: state.upgrades,
+        isMuted: state.isMuted,
       })
     }
   )

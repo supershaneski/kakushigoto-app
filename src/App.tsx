@@ -31,6 +31,8 @@ const App: React.FC = () => {
     checkOfflineEarnings,
     incrementTaps,
     updateTimestamp,
+    isMuted,
+    toggleMute,
   } = useAppStore();
 
   const [isShopOpen, setIsShopOpen] = useState(false);
@@ -112,9 +114,28 @@ const App: React.FC = () => {
           <span className="logoSubtitle">Kakushigoto</span>
         </div>
 
-        <div className="currencyBox" onClick={(e) => e.stopPropagation()}>
-          <span className="currencyVal">{Math.floor(metaPoints).toLocaleString()}</span>
-          <span className="coinSym">●</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }} onClick={(e) => e.stopPropagation()}>
+          <button 
+            className="floatingShopBtn" 
+            style={{ 
+              position: 'static', 
+              boxShadow: 'none', 
+              padding: '6px 12px', 
+              borderRadius: '12px', 
+              pointerEvents: 'all',
+              background: 'rgba(255, 255, 255, 0.03)',
+              border: '1px solid rgba(255, 255, 255, 0.06)'
+            }}
+            onClick={toggleMute}
+            title={isMuted ? "Unmute sound effects" : "Mute sound effects"}
+          >
+            <span>{isMuted ? '🔇' : '🔊'}</span>
+          </button>
+
+          <div className="currencyBox" style={{ margin: 0 }}>
+            <span className="currencyVal">{Math.floor(metaPoints).toLocaleString()}</span>
+            <span className="coinSym">●</span>
+          </div>
         </div>
       </header>
 
